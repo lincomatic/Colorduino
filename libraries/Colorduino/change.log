@@ -1,0 +1,11 @@
+2011/03/10 SCL lincomatic@hotmail.com v1.2
+   take out superfluous cli/sei in ISR
+   take out superfluous     TCCR2A |= (1 << WGM21) | (1 << WGM20);   in _T2C_Init()
+   lower screen refresh rate from 100Hz to 80Hz
+	
+2011/03/06 SCL lincomatic@hotmail.com v1.1
+ fixed bugs in coordinate system.  origin (0,0) is bottom left corner
+ rearranged frame buffer for better performance
+
+2011/03/04 SCL lincomatic@hotmail.com v1.0
+ Initial Release
