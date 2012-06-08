@@ -1,6 +1,6 @@
 /*
-  Colorduino - Colorduino Library for Arduino V1.1
-  Copyright (c) 2011 Sam C. Lin lincomatic@hotmail.com ALL RIGHTS RESERVED
+  Colorduino - Colorduino Library for Arduino
+  Copyright (c) 2011-2012 Sam C. Lin <lincomatic@hotmail.com>
   based on C code by zzy@iteadstudio
     Copyright (c) 2010 zzy@IteadStudio.  All right reserved.
 
