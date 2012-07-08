@@ -41,50 +41,48 @@ define the IO
 *****************************/
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
+#define RST PORTF // A2 = PF2
 #define RST_BIT 0x04
+#define LAT PORTF // A1 = PF1
 #define LAT_BIT 0x02
+#define SLB PORTF // A0 = PF0
 #define SLB_BIT 0x01
+#define SCL PORTH // D6 = PH3
 #define SCL_BIT 0x08
+#define SDA PORTH // D7 = PH4
 #define SDA_BIT 0x10
 
-#define RST PORTF // PORTF2
-#define LAT PORTF // PORTF1
-#define SLB PORTF // PORTF0
-#define SDA PORTH // PORTH4
-#define SCL PORTH // PORTH3
-
-#define open_line0	{PORTH=0x20;}
-#define open_line1	{PORTH=0x40;}
-#define open_line2	{PORTB=0x10;}
-#define open_line3	{PORTB=0x20;}
-#define open_line4	{PORTB=0x40;}
-#define open_line5	{PORTB=0x80;}
-#define open_line6	{PORTE=0x20;}
-#define open_line7	{PORTG=0x20;}
+#define open_line0	{PORTH=0x20;} // D8 = PH5
+#define open_line1	{PORTH=0x40;} // D9 = PH6
+#define open_line2	{PORTB=0x10;} // D10 = PB4
+#define open_line3	{PORTB=0x20;} // D11 = PB5
+#define open_line4	{PORTB=0x40;} // D12 = PB6
+#define open_line5	{PORTB=0x80;} // D13 = PB7
+#define open_line6	{PORTE=0x20;} // D3 = PE5
+#define open_line7	{PORTG=0x20;} // D4 = PG5
 #define close_all_lines	{PORTH=0x00;PORTB=0x00;PORTE=0x00;PORTG=0x00;}
 
-#else
+#else // 328/168
 
+#define RST PORTC // A2 = PC2
 #define RST_BIT 0x04
+#define LAT PORTC // A1 = PC1
 #define LAT_BIT 0x02
+#define SLB PORTC // A0 = PC0
 #define SLB_BIT 0x01
+#define SCL PORTD // D6 = PD6
 #define SCL_BIT 0x40
+#define SDA PORTD // D7 = PD7
 #define SDA_BIT 0x80
 
-#define RST PORTC
-#define LAT PORTC
-#define SLB PORTC
-#define SDA PORTD
-#define SCL PORTD
-
-#define open_line0	{PORTB=0x01;}
-#define open_line1	{PORTB=0x02;}
-#define open_line2	{PORTB=0x04;}
-#define open_line3	{PORTB=0x08;}
-#define open_line4	{PORTB=0x10;}
-#define open_line5	{PORTB=0x20;}
-#define open_line6	{PORTD=0x08;}
-#define open_line7	{PORTD=0x10;}
+#define open_line0	{PORTB=0x01;} // D8 = PB0
+#define open_line1	{PORTB=0x02;} // D9 = PB1
+#define open_line2	{PORTB=0x04;} // D10 = PB2
+#define open_line3	{PORTB=0x08;} // D11 = PB3
+#define open_line4	{PORTB=0x10;} // D12 = PB4
+#define open_line5	{PORTB=0x20;} // D13 = PB5
+#define open_line6	{PORTD=0x08;} // D3 = PD3
+#define open_line7	{PORTD=0x10;} // D4 = PD4
 #define close_all_lines	{PORTD=0x00;PORTB=0x00;}
 
 #endif  // defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
