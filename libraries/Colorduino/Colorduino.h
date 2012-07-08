@@ -39,6 +39,32 @@
 /*****************************
 define the IO
 *****************************/
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+
+#define RST_BIT 0x04
+#define LAT_BIT 0x02
+#define SLB_BIT 0x01
+#define SCL_BIT 0x08
+#define SDA_BIT 0x10
+
+#define RST PORTF // PORTF2
+#define LAT PORTF // PORTF1
+#define SLB PORTF // PORTF0
+#define SDA PORTH // PORTH4
+#define SCL PORTH // PORTH3
+
+#define open_line0	{PORTH=0x20;}
+#define open_line1	{PORTH=0x40;}
+#define open_line2	{PORTB=0x10;}
+#define open_line3	{PORTB=0x20;}
+#define open_line4	{PORTB=0x40;}
+#define open_line5	{PORTB=0x80;}
+#define open_line6	{PORTE=0x20;}
+#define open_line7	{PORTG=0x20;}
+#define close_all_lines	{PORTH=0x00;PORTB=0x00;PORTE=0x00;PORTG=0x00;}
+
+#else
+
 #define RST_BIT 0x04
 #define LAT_BIT 0x02
 #define SLB_BIT 0x01
@@ -61,6 +87,8 @@ define the IO
 #define open_line7	{PORTD=0x10;}
 #define close_all_lines	{PORTD=0x00;PORTB=0x00;}
 
+#endif  // defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+
 #define LED_RST_SET RST|=RST_BIT
 #define LED_RST_CLR RST&=~RST_BIT
 #define LED_SDA_SET SDA|=SDA_BIT
@@ -71,6 +99,7 @@ define the IO
 #define LED_LAT_CLR LAT&=~LAT_BIT
 #define LED_SLB_SET SLB|=SLB_BIT
 #define LED_SLB_CLR SLB&=~SLB_BIT
+
 
 typedef struct pixelRGB {
   unsigned char r;
@@ -94,6 +123,19 @@ public:
 
   void _IO_Init()
   {
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+    DDRF = 0xff;
+    DDRH = 0xff;
+    DDRB = 0xff;
+    DDRE = 0xff;
+    DDRG = 0xff;
+
+    PORTF = 0x00;
+    PORTH = 0x00;  
+    PORTB = 0x00;
+    PORTE = 0x00;
+    PORTG = 0x00;
+#else
     DDRD = 0xff; // set all pins direction of PortD
     DDRC = 0xff; // set all pins direction of PortC
     DDRB = 0xff; // set all pins direction of PortB
@@ -101,6 +143,7 @@ public:
     PORTD = 0x00; // set all pins output is low of PortD
     PORTC = 0x00; // set all pins output is low of PortC
     PORTB = 0x00; // set all pins output is low of PortB
+#endif  // defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   }
   
   void LED_Delay(unsigned char i);
@@ -135,6 +178,13 @@ public:
   //                                           1       1      1      /1024
   // TCNT2 increments every  = 16MHz / prescaler
 
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+	TCCR2B = 0x00; // Disable timer while configuring
+    TCCR2A = 0x00; // Use normal mode
+    TIMSK2 = 0x01; // Timer2 overflow interrupt enable
+    TCNT2  = 0xff; // Reset timer to count of 255
+	TCCR2B = 0x05; // Prescaler = 128
+#else
     // set prescaler to 128 -> TCNT2 freq = 125KHz
     TCCR2B |= ((1<<CS22)|(1<<CS20));
     TCCR2B &= ~((1<<CS21));   
@@ -143,6 +193,7 @@ public:
     ASSR |= (1<<AS2);       // Use internal clock - external clock not used in Arduino
     TIMSK2 |= (1<<TOIE2) | (0<<OCIE2B);   //Timer2 Overflow Interrupt Enable
     TCNT2 = 0xff;
+#endif  // defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
     sei();
   }
   
