@@ -1,3 +1,9 @@
+2012/07/11 SCL v1.2.3
+added Leonardo support (thanks to Markus Lange)
+	
+2012/07/07 SCL v1.2.2
+added Mega support (merged from wiltwong)
+
 2012/06/07 SCL v1.2.1
 fix compilation errors for Arduino v1.x
 
