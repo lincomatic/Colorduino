@@ -55,6 +55,30 @@ void ColorduinoObject::SetWhiteBal(unsigned char wbval[3])
   LED_SLB_SET;
 }
 
+/********************************************************
+Name: ColorFill
+Function: Fill the frame with a color
+Parameter:R: the value of RED.   Range:RED 0~255
+          G: the value of GREEN. Range:RED 0~255
+          B: the value of BLUE.  Range:RED 0~255
+********************************************************/
+void ColorduinoObject::ColorFill(unsigned char R,unsigned char G,unsigned char B)
+{
+  PixelRGB *p = GetPixel(0,0);
+  for (unsigned char y=0;y<ColorduinoScreenWidth;y++) {
+    for(unsigned char x=0;x<ColorduinoScreenHeight;x++) {
+      p->r = R;
+      p->g = G;
+      p->b = B;
+      p++;
+    }
+  }
+  
+  FlipPage();
+}
+
+
+
 
 // global instance
 ColorduinoObject Colorduino;

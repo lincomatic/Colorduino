@@ -1,5 +1,6 @@
 2012/07/11 SCL v1.2.3
 added Leonardo support (thanks to Markus Lange)
+added ColorFill() to library
 	
 2012/07/07 SCL v1.2.2
 added Mega support (merged from wiltwong)
