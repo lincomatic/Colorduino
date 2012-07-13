@@ -1,3 +1,7 @@
+2012/07/12 SCL v1.2.4
+fixed bug in Mega support introduced in 1.2.3 (thanks wiltwong!)
+fixed a bug in close_lines() in Leonardo code (thanks Markus Lange)
+	
 2012/07/11 SCL v1.2.3
 added Leonardo support (thanks to Markus Lange)
 added ColorFill() to library

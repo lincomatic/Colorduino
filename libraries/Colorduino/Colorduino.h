@@ -25,6 +25,7 @@
 #include "Arduino.h"
 #else
 #include "WProgram.h"
+#include "pins_arduino.h"
 #endif
 
 #include <avr/pgmspace.h> 
@@ -62,7 +63,7 @@ define the IO
 #if defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define close_all_lines	{PORTB&=0b00001111;PORTG&=0b11101111;PORTE&=0b11101111;PORTH&=0b11001111;}
 #elif defined(__AVR_ATmega32U4__)
-#define close_all_lines	{PORTB&=0b00001111;PORTC&=0b01111111;PORTD&=0b11101110;}
+#define close_all_lines {PORTB&=0b00001111;PORTC&=0b01111111;PORTD&=0b10101110;}
 #else
 #define close_all_lines	{PORTB&=0b11000000;PORTD&=0b11000000;}
 #endif
@@ -150,12 +151,34 @@ class ColorduinoObject {
 
   void _IO_Init()
     {
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+    DDRF = 0xff;
+    DDRH = 0xff;
+    DDRB = 0xff;
+    DDRE = 0xff;
+    DDRG = 0xff;
+
+    PORTF = 0x00;
+    PORTH = 0x00;  
+    PORTB = 0x00;
+    PORTE = 0x00;
+    PORTG = 0x00;
+#elif defined(__AVR_ATmega328__) || defined(__AVR_ATmega168__)
+    DDRD = 0xff; // set all pins direction of PortD
+    DDRC = 0xff; // set all pins direction of PortC
+    DDRB = 0xff; // set all pins direction of PortB
+    
+    PORTD = 0x00; // set all pins output is low of PortD
+    PORTC = 0x00; // set all pins output is low of PortC
+    PORTB = 0x00; // set all pins output is low of PortB
+#else
       uint8_t lines[] = {A0,A1,A2,3,4,6,7,8,9,10,11,12,13};
     
       for(int i = 0; i < 13;i++){
     	pinMode(lines[i],OUTPUT);
     	digitalWrite(lines[i],LOW);
       }
+#endif
     }
   
   void LED_Delay(unsigned char i);
