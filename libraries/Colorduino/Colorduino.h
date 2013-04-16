@@ -61,7 +61,7 @@ define the IO
 #define open_line7	{*portOutputRegister(digitalPinToPort(4))=digitalPinToBitMask(4);}
 
 #if defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define close_all_lines	{PORTB&=0b00001111;PORTG&=0b11101111;PORTE&=0b11101111;PORTH&=0b11001111;}
+#define close_all_lines {PORTB&=0b00001111;PORTG&=0b11011111;PORTE&=0b11001111;PORTH&=0b10011111;}
 #elif defined(__AVR_ATmega32U4__)
 #define close_all_lines {PORTB&=0b00001111;PORTC&=0b01111111;PORTD&=0b10101110;}
 #else
