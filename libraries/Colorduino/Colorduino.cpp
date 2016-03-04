@@ -73,12 +73,8 @@ void ColorduinoObject::ColorFill(unsigned char R,unsigned char G,unsigned char B
       p++;
     }
   }
-  
   FlipPage();
 }
-
-
-
 
 // global instance
 ColorduinoObject Colorduino;
@@ -93,11 +89,10 @@ ISR(TIMER4_OVF_vect)          //Timer4  Service
   //if TCNT4 = 61, ISR fires every 256 - 61 = 195 ticks
   //125KHz / 195 = 641.026Hz / 8 rows = 80.128Hz refresh rate
   //TCNT4 = 100;
-  TCNT4 = 61;
-  close_all_lines;  
   Colorduino.run();
   Colorduino.open_line(Colorduino.line);
   if (++Colorduino.line > 7) Colorduino.line = 0;
+  TCNT4 = 61; //reset timer
 }
 #else
 ISR(TIMER2_OVF_vect)          //Timer2  Service 
@@ -109,11 +104,10 @@ ISR(TIMER2_OVF_vect)          //Timer2  Service
  // if TCNT2 = 61, ISR fires every 256 - 61 = 195 ticks
  // 125KHz / 195 = 641.026Hz / 8 rows = 80.128Hz refresh rate
   //  TCNT2 = 100;
-  TCNT2 = 61;
-  close_all_lines;  
   Colorduino.run();
   Colorduino.open_line(Colorduino.line);
   if (++Colorduino.line > 7) Colorduino.line = 0;
+  TCNT2 = 61; //reset timer
 }
 #endif
 
@@ -130,7 +124,8 @@ void ColorduinoObject::run()
   LED_SLB_SET;
   LED_LAT_CLR;
   PixelRGB *pixel = GetDrawPixel(0,line);
-  for(unsigned char x=0;x<ColorduinoScreenWidth;x++)
+  //Load the Shift registers with the next frame of data
+  for(unsigned char x=0;x<ColorduinoScreenWidth;x++) 
   {
     unsigned char temp = pixel->b;
     unsigned char p;
@@ -165,7 +160,9 @@ void ColorduinoObject::run()
     }
     pixel++;
   }
-  LED_LAT_SET;
+  close_all_lines; //Close all lines AFTER the data has been loaded into the shift registers, and just BEFORE we set the latch.
+  // This minimises the time that the LEDs are 'off' and drastically increases brightness (20-30%)
+  LED_LAT_SET; //Set the latch, which will move the data from the DM163's Shift Regiters
   LED_LAT_CLR;
+  //Open the specific line back in the calling ISR, as that is maintaining which line should be run next.
 }
-
