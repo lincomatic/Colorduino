@@ -284,24 +284,43 @@ class ColorduinoObject {
     sei();
   }
 
-  // get a pixel for writing in the offscreen framebuffer
-  PixelRGB *GetPixel(unsigned char x,unsigned char y) {
+  // get a pixel for writing in the offscreen framebuffer, return null if out of screen
+  PixelRGB *GetPixel(char x, char y) {
+    if ( x < 0 || x >= COLORDUINO_SCREEN_WIDTH ||
+         y < 0 || y >= COLORDUINO_SCREEN_HEIGHT ) 
+    {
+      return 0;
+    }
     return curWriteFrame + (y * ColorduinoScreenWidth) + x;
   }
 
-  // get a pixel from the active framebuffer
-  PixelRGB *GetDrawPixel(unsigned char x,unsigned char y) {
+  // get a pixel from the active framebuffer, return null if out of screen
+  PixelRGB *GetDrawPixel(char x, char y) {
+    if ( x < 0 || x >= COLORDUINO_SCREEN_WIDTH ||
+         y < 0 || y >= COLORDUINO_SCREEN_HEIGHT ) 
+    {
+      return 0;
+    }
     return curDrawFrame + (y * ColorduinoScreenWidth) + x;
   }
 
   // set a pixel in the offscreen frame buffer
-  void SetPixel(unsigned char x, unsigned char y, unsigned char r, unsigned char g, unsigned char b)
-    {
-      PixelRGB *p = GetPixel(x,y);
+  void SetPixel(char x, char y, unsigned char r, unsigned char g, unsigned char b) {
+    PixelRGB *p = GetPixel(x,y);
+    if (p) {
       p->r = r;
       p->g = g;
       p->b = b;
     }
+  }
+
+  // set a pixel in the offscreen frame buffer
+  void SetPixel(char x, char y, const PixelRGB & color) {
+    PixelRGB * p = GetPixel(x,y);
+    if (p) {
+      *p = color;
+    }
+  }
 
 /********************************************************
 Name: ColorFill
