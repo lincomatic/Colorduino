@@ -289,7 +289,7 @@ class ColorduinoObject {
     if ( x < 0 || x >= ColorduinoScreenWidth ||
          y < 0 || y >= ColorduinoScreenHeight ) 
     {
-      return 0;
+      return NULL;
     }
     return curWriteFrame + (y * ColorduinoScreenWidth) + x;
   }
@@ -299,7 +299,7 @@ class ColorduinoObject {
     if ( x < 0 || x >= ColorduinoScreenWidth ||
          y < 0 || y >= ColorduinoScreenHeight ) 
     {
-      return 0;
+      return NULL;
     }
     return curDrawFrame + (y * ColorduinoScreenWidth) + x;
   }

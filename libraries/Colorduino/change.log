@@ -1,3 +1,7 @@
+2016/12/12 SCL v1.2.5
+- merged sbouba PR#9 - limit check Get/Set functions
+- change 0 to NULL
+	
 2012/07/12 SCL v1.2.4
 fixed bug in Mega support introduced in 1.2.3 (thanks wiltwong!)
 fixed a bug in close_lines() in Leonardo code (thanks Markus Lange)
