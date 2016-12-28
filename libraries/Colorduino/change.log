@@ -1,3 +1,6 @@
+2016/12/12 SCL v1.2.6
+- Colorduino.h - fix C99 warning
+	
 2016/12/12 SCL v1.2.5
 - merged sbouba PR#9 - limit check Get/Set functions
 - change 0 to NULL

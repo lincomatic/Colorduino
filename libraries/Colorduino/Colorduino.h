@@ -1,6 +1,6 @@
 /*
   Colorduino - Colorduino Library for Arduino
-  Copyright (c) 2011-2012 Sam C. Lin <lincomatic@hotmail.com>
+  Copyright (c) 2011-2016 Sam C. Lin <lincomatic@hotmail.com>
   based on C code by zzy@iteadstudio
   Copyright (c) 2010 zzy@IteadStudio.  All right reserved.
 
@@ -46,11 +46,11 @@ define the IO
 #define SLB_BIT digitalPinToBitMask(A0)
 #define SCL_BIT digitalPinToBitMask(6)
 #define SDA_BIT digitalPinToBitMask(7)
-#define RST* portOutputRegister(digitalPinToPort(A0))
-#define LAT* portOutputRegister(digitalPinToPort(A1))
-#define SLB* portOutputRegister(digitalPinToPort(A2))
-#define SCL* portOutputRegister(digitalPinToPort(6))
-#define SDA* portOutputRegister(digitalPinToPort(7))
+#define RST *portOutputRegister(digitalPinToPort(A0))
+#define LAT *portOutputRegister(digitalPinToPort(A1))
+#define SLB *portOutputRegister(digitalPinToPort(A2))
+#define SCL *portOutputRegister(digitalPinToPort(6))
+#define SDA *portOutputRegister(digitalPinToPort(7))
 #define open_line0	{*portOutputRegister(digitalPinToPort(8))=digitalPinToBitMask(8);}
 #define open_line1	{*portOutputRegister(digitalPinToPort(9))=digitalPinToBitMask(9);}
 #define open_line2	{*portOutputRegister(digitalPinToPort(10))=digitalPinToBitMask(10);}
