@@ -5,3 +5,5 @@ To install, copy libraries/Colorduino to your <arduino sketchbook folder>/librar
 ColorduinoPlasma.pde is a sample program which uses the library.  It displays an animated plasma on an 8x8 LED matrix
 
 NOTE: Later versions of Arduino make the library run slowly. It's easy to see because ColorduinoPlasma runs slowly in a step-like version. I'm not sure which version triggers the slowdown, but my testing with Arduino 1.6.3 -> 1.8.1 all exhibit the slowdown. Arduino 1.0.2 runs full speed
+
+This fork makes the library conform to Arduino library standard.
