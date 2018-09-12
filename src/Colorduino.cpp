@@ -34,6 +34,7 @@ void ColorduinoObject::LED_Delay(unsigned char i)
 // wbval[2]=blue
 void ColorduinoObject::SetWhiteBal(unsigned char wbval[3])
 {
+  cli();  // must not allow ISR to come in now, will screw up timing!
   LED_LAT_CLR;
   LED_SLB_CLR;
   for(unsigned char k=0;k<ColorduinoScreenHeight;k++)
@@ -53,6 +54,7 @@ void ColorduinoObject::SetWhiteBal(unsigned char wbval[3])
     }
   }
   LED_SLB_SET;
+  sei();  // safe to re-enable ISR
 }
 
 /********************************************************
@@ -77,11 +79,19 @@ void ColorduinoObject::ColorFill(unsigned char R,unsigned char G,unsigned char B
   FlipPage();
 }
 
+// ISR fires every 256-TCNTn ticks
+// if TCNTn = 100, ISR fires every 156 ticks
+// prescaler = 128 so ISR fires every 16MHz / 128 = 125KHz
+// 125KHz / 156 = 801.282Hz / 8 rows = 100.16Hz refresh rate
+// if TCNTn = 61, ISR fires every 256 - 61 = 195 ticks
+// 125KHz / 195 = 641.026Hz / 8 rows = 80.128Hz refresh rate
 
+unsigned char timerCounter;
 
-
-// global instance
-ColorduinoObject Colorduino;
+void ColorduinoObject::SetTimerCounter(unsigned char data)
+{
+  timerCounter = data;
+}
 
 #if defined (__AVR_ATmega32U4__)
 ISR(TIMER4_OVF_vect)          //Timer4  Service 
@@ -129,7 +139,13 @@ void ColorduinoObject::run()
 {
   LED_SLB_SET;
   LED_LAT_CLR;
+  // Inside the LED driver. Channel 23 is the last shift register so we should  
+  // start with column 7B-7G-7R... and ...1B-1G-1R last
+#if defined (REVERSE_ROWCHANNELS)
   PixelRGB *pixel = GetDrawPixel(0,line);
+#else
+  PixelRGB *pixel = GetDrawPixel(ColorduinoScreenWidth-1,line);
+#endif
   for(unsigned char x=0;x<ColorduinoScreenWidth;x++)
   {
     unsigned char temp = pixel->b;
@@ -163,9 +179,15 @@ void ColorduinoObject::run()
       LED_SCL_CLR;
       LED_SCL_SET;
     }
+#if defined (REVERSE_ROWCHANNELS)
     pixel++;
+#else
+    pixel--;
+#endif
   }
   LED_LAT_SET;
   LED_LAT_CLR;
 }
 
+// global instance
+ColorduinoObject Colorduino;

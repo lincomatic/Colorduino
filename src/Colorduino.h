@@ -37,37 +37,15 @@
 #define ColorduinoScreenWidth 8
 #define ColorduinoScreenHeight 8
 
+//#define REVERSE_ROWCHANNELS
+
 /*****************************
 define the IO
 *****************************/
-#if defined(ARDUINO) && ARDUINO >= 100
-#define RST_BIT digitalPinToBitMask(A2)
-#define LAT_BIT digitalPinToBitMask(A1)
-#define SLB_BIT digitalPinToBitMask(A0)
-#define SCL_BIT digitalPinToBitMask(6)
-#define SDA_BIT digitalPinToBitMask(7)
-#define RST *portOutputRegister(digitalPinToPort(A0))
-#define LAT *portOutputRegister(digitalPinToPort(A1))
-#define SLB *portOutputRegister(digitalPinToPort(A2))
-#define SCL *portOutputRegister(digitalPinToPort(6))
-#define SDA *portOutputRegister(digitalPinToPort(7))
-#define open_line0	{*portOutputRegister(digitalPinToPort(8))=digitalPinToBitMask(8);}
-#define open_line1	{*portOutputRegister(digitalPinToPort(9))=digitalPinToBitMask(9);}
-#define open_line2	{*portOutputRegister(digitalPinToPort(10))=digitalPinToBitMask(10);}
-#define open_line3	{*portOutputRegister(digitalPinToPort(11))=digitalPinToBitMask(11);}
-#define open_line4	{*portOutputRegister(digitalPinToPort(12))=digitalPinToBitMask(12);}
-#define open_line5	{*portOutputRegister(digitalPinToPort(13))=digitalPinToBitMask(13);}
-#define open_line6	{*portOutputRegister(digitalPinToPort(3))=digitalPinToBitMask(3);}
-#define open_line7	{*portOutputRegister(digitalPinToPort(4))=digitalPinToBitMask(4);}
-
-#if defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define close_all_lines {PORTB&=0b00001111;PORTG&=0b11011111;PORTE&=0b11011111;PORTH&=0b10011111;}
-#elif defined(__AVR_ATmega32U4__)
-#define close_all_lines {PORTB&=0b00001111;PORTC&=0b01111111;PORTD&=0b10101110;}
-#else
-#define close_all_lines	{PORTB&=0b11000000;PORTD&=0b11000000;}
-#endif
-#else // !arduino 1.0
+//
+// Removed all the inefficient digitalPinToBitMask() and 
+// digitalPinToPort(), replaced with direct PORT and bit mapping
+//
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 #define RST PORTF // A2 = PF2
@@ -90,7 +68,30 @@ define the IO
 #define open_line6	{PORTE=0x20;} // D3 = PE5
 #define open_line7	{PORTG=0x20;} // D4 = PG5
 #define close_all_lines	{PORTH=0x00;PORTB=0x00;PORTE=0x00;PORTG=0x00;}
+
 #elif defined(__AVR_ATmega32U4__)
+
+#define RST PORTF // A2 = PF5
+#define RST_BIT 0x20
+#define LAT PORTF // A1 = PF6
+#define LAT_BIT 0x40
+#define SLB PORTF // A0 = PF7
+#define SLB_BIT 0x80
+#define SCL PORTD // D6 = PD7
+#define SCL_BIT 0x80
+#define SDA PORTE // D7 = PE6
+#define SDA_BIT 0x40
+
+#define open_line0	{PORTB=0x10;} // D8 = PB4
+#define open_line1	{PORTB=0x20;} // D9 = PB5
+#define open_line2	{PORTB=0x40;} // D10 = PB6
+#define open_line3	{PORTB=0x80;} // D11 = PB7
+#define open_line4	{PORTD=0x40;} // D12 = PD6
+#define open_line5	{PORTC=0x80;} // D13 = PC7
+#define open_line6	{PORTD=0x01;} // D3 = PD0
+#define open_line7	{PORTD=0x10;} // D4 = PD4
+#define close_all_lines	{PORTB=0x00;PORTD=0x00;PORTC=0x00;}
+
 #else // 328/168
 
 #define RST PORTC // A2 = PC2
@@ -115,7 +116,6 @@ define the IO
 #define close_all_lines	{PORTD=0x00;PORTB=0x00;}
 
 #endif  // defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#endif // defined(ARDUINO) && ARDUINO >= 100
 
 #define LED_RST_SET RST|=RST_BIT
 #define LED_RST_CLR RST&=~RST_BIT
@@ -241,6 +241,8 @@ class ColorduinoObject {
       TIMSK2 |= ((1<<TOIE2) | (0<<OCIE2B));   //Timer2 Overflow Interrupt Enable
       TCNT2 = 0xff;
 #endif
+      // TCNTn=99, ISR fires every 256-99 = 157 ticks, 125KHz/157 = 796.2Hz/8 rows = 99.5Hz refresh rate
+      SetTimerCounter(99);
       sei();
     }
   
