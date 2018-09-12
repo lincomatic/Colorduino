@@ -103,7 +103,7 @@ ISR(TIMER4_OVF_vect)          //Timer4  Service
   //if TCNT4 = 61, ISR fires every 256 - 61 = 195 ticks
   //125KHz / 195 = 641.026Hz / 8 rows = 80.128Hz refresh rate
   //TCNT4 = 100;
-  TCNT4 = 61;
+  TCNT4 = timerCounter;
   close_all_lines;  
   Colorduino.run();
   Colorduino.open_line(Colorduino.line);
@@ -119,7 +119,7 @@ ISR(TIMER2_OVF_vect)          //Timer2  Service
  // if TCNT2 = 61, ISR fires every 256 - 61 = 195 ticks
  // 125KHz / 195 = 641.026Hz / 8 rows = 80.128Hz refresh rate
   //  TCNT2 = 100;
-  TCNT2 = 61;
+  TCNT2 = timerCounter;
   close_all_lines;  
   Colorduino.run();
   Colorduino.open_line(Colorduino.line);
