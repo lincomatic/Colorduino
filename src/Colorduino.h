@@ -333,6 +333,14 @@ Parameter:R: the value of RED.   Range:RED 0~255
 ********************************************************/
   void ColorFill(unsigned char R,unsigned char G,unsigned char B);
 
+/********************************************************
+Name: SetTimerCounter(unsigned char data)
+Function: Set the TimerCounter variable.
+          ISR fires every 256-TCNTn ticks
+Parameter:data=loaded into TCNTn at the end of ISR
+********************************************************/
+  void SetTimerCounter(unsigned char data);
+
   void run();
 };
 
