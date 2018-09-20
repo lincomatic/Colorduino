@@ -26,6 +26,11 @@
 
 #include <Colorduino.h>
 
+// To show off our hardware PWM LED driver (capable of displaying 16M colors), 
+// we will add gamma correction to show more accurate colors, and we will 
+// see better color transition.
+#include "gamma8.h"   
+
 typedef struct
 {
   unsigned char r;
@@ -41,6 +46,8 @@ typedef struct
   unsigned char v;
 } ColorHSV;
 
+// increase the scaling of the plasma to see more details of the color transition.
+const float PlasmaScaling = 10.0; 
 unsigned char plasma[ColorduinoScreenWidth][ColorduinoScreenHeight];
 long paletteShift;
 
@@ -89,6 +96,11 @@ void HSVtoRGB(void *vRGB, void *vHSV)
   colorRGB->r = (int)(r * 255.0);
   colorRGB->g = (int)(g * 255.0);
   colorRGB->b = (int)(b * 255.0);
+
+  // gamma correction
+  colorRGB->r = pgm_read_byte(&gamma8[colorRGB->r]);
+  colorRGB->g = pgm_read_byte(&gamma8[colorRGB->g]);
+  colorRGB->b = pgm_read_byte(&gamma8[colorRGB->b]);
 }
 
 float
@@ -109,10 +121,10 @@ plasma_morph()
   for(y = 0; y < ColorduinoScreenHeight; y++)
     for(x = 0; x < ColorduinoScreenWidth; x++) {
       {
-	value = sin(dist(x + paletteShift, y, 128.0, 128.0) / 8.0)
-	  + sin(dist(x, y, 64.0, 64.0) / 8.0)
-	  + sin(dist(x, y + paletteShift / 7, 192.0, 64) / 7.0)
-	  + sin(dist(x, y, 192.0, 100.0) / 8.0);
+	value = sin((x + paletteShift) / PlasmaScaling)
+	  + sin(dist(x, y, 64.0, 64.0) / PlasmaScaling)
+	  + sin((y + paletteShift / 7.0) / PlasmaScaling)
+	  + sin(dist(x, y, 192.0, 100.0) / PlasmaScaling);
 	colorHSV.h=(unsigned char)((value) * 128)&0xff;
 	colorHSV.s=255; 
 	colorHSV.v=255;
